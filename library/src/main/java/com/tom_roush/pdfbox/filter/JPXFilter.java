@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.gemalto.jp2.JP2Decoder;
-import com.gemalto.jp2.JP2Encoder;
+//import com.gemalto.jp2.JP2Decoder;
+//import com.gemalto.jp2.JP2Encoder;
 import com.tom_roush.pdfbox.cos.COSDictionary;
 import com.tom_roush.pdfbox.cos.COSName;
 import com.tom_roush.pdfbox.io.IOUtils;
@@ -43,6 +43,7 @@ import com.tom_roush.pdfbox.pdmodel.graphics.color.PDJPXColorSpace;
  * @author John Hewson
  * @author Timo Boehme
  */
+// TODO restore functionality when lib replacement is available
 public final class JPXFilter extends Filter
 {
     private static final int CACHE_SIZE = 1024;
@@ -102,12 +103,12 @@ public final class JPXFilter extends Filter
             throw new MissingImageReaderException("Cannot read JPX image: JP2Android is not installed.");
         }
 
-        JP2Decoder decoder = new JP2Decoder(input);
+        //JP2Decoder decoder = new JP2Decoder(input);
 
         // TODO: uncomment after upgrading JP2ForAndroid
         // decoder.setSourceRegion(options.getSourceRegion());
 
-        Bitmap image = decoder.decode();
+        //Bitmap image = decoder.decode();
 
         COSDictionary parameters = result.getParameters();
 
@@ -125,16 +126,17 @@ public final class JPXFilter extends Filter
         }
 
         // override dimensions, see PDFBOX-1735
-        parameters.setInt(COSName.WIDTH, image.getWidth());
-        parameters.setInt(COSName.HEIGHT, image.getHeight());
+        //parameters.setInt(COSName.WIDTH, image.getWidth());
+        //parameters.setInt(COSName.HEIGHT, image.getHeight());
 
         // extract embedded color space
         if (!parameters.containsKey(COSName.COLORSPACE) && Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
         {
-            result.setColorSpace(new PDJPXColorSpace(image.getColorSpace()));
+            //result.setColorSpace(new PDJPXColorSpace(image.getColorSpace()));
         }
 
-        return image;
+        //return image;
+        return null;
     }
 
     /**
@@ -144,9 +146,9 @@ public final class JPXFilter extends Filter
     protected void encode(InputStream input, OutputStream encoded, COSDictionary parameters)
         throws IOException
     {
-        Bitmap bitmap = BitmapFactory.decodeStream(input);
-        byte[] jpeBytes = new JP2Encoder(bitmap).encode();
-        IOUtils.copy(new ByteArrayInputStream(jpeBytes), encoded);
-        encoded.flush();
+//        Bitmap bitmap = BitmapFactory.decodeStream(input);
+//        byte[] jpeBytes = new JP2Encoder(bitmap).encode();
+//        IOUtils.copy(new ByteArrayInputStream(jpeBytes), encoded);
+//        encoded.flush();
     }
 }
