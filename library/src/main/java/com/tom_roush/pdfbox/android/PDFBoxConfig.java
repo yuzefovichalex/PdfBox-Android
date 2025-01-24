@@ -1,5 +1,8 @@
 package com.tom_roush.pdfbox.android;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PDFBoxConfig
 {
     /**
@@ -28,6 +31,8 @@ public class PDFBoxConfig
      */
     public static FontLoadLevel FONT_LOAD_LEVEL = FontLoadLevel.MINIMUM;
 
+    private static final HashMap<String, String> customFonts = new HashMap<>();
+
     private static boolean debugLoggingEnabled = false;
 
     /**
@@ -44,6 +49,21 @@ public class PDFBoxConfig
     public static void setFontLoadLevel(FontLoadLevel fontLoadLevel)
     {
         FONT_LOAD_LEVEL = fontLoadLevel;
+    }
+
+    /**
+     * @return User defined custom fonts.
+     * */
+    public static Map<String, String> getCustomFonts() {
+        return customFonts;
+    }
+
+    /**
+     * Add additional font to be used in font mapping. The custom fonts are loaded independently
+     * from the specified font load level. The font should be added before document is loaded.
+     * */
+    public static void addCustomFont(String name, String path) {
+        customFonts.put(name, path);
     }
 
     /**

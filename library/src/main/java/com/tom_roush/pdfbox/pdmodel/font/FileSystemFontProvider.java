@@ -31,6 +31,7 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.tom_roush.fontbox.FontBoxFont;
@@ -326,6 +327,14 @@ final class FileSystemFontProvider extends FontProvider
     FileSystemFontProvider(FontCache cache)
     {
         this.cache = cache;
+
+        try {
+            for (Map.Entry<String, String> entry : PDFBoxConfig.getCustomFonts().entrySet()) {
+                addTrueTypeFont(new File(entry.getValue()));
+            }
+        } catch (IOException e) {
+            Log.w("PdfBox-Android", "Unable to load custom fonts.");
+        }
 
         // XXX: load in background?
         if (PDFBoxConfig.getFontLoadLevel() == PDFBoxConfig.FontLoadLevel.NONE)
