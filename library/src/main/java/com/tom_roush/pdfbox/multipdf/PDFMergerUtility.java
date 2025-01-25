@@ -326,8 +326,10 @@ public class PDFMergerUtility
     }
 
     /**
-     * Merge the list of source documents, saving the result in the destination
-     * file.
+     * Merge the list of source documents, saving the result in the destination file. The source
+     * list is not reset after merge. If you want to merge one document at a time, then it's better
+     * to use
+     * {@link #appendDocument(PDDocument, PDDocument)}.
      *
      * @param memUsageSetting defines how memory is used for buffering PDF streams;
      *                        in case of <code>null</code> unrestricted main memory is used 
@@ -1163,11 +1165,11 @@ public class PDFMergerUtility
     private void mergeRoleMap(PDStructureTreeRoot srcStructTree, PDStructureTreeRoot destStructTree)
     {
         COSDictionary srcDict = srcStructTree.getCOSObject().getCOSDictionary(COSName.ROLE_MAP);
-        COSDictionary destDict = destStructTree.getCOSObject().getCOSDictionary(COSName.ROLE_MAP);
         if (srcDict == null)
         {
             return;
         }
+        COSDictionary destDict = destStructTree.getCOSObject().getCOSDictionary(COSName.ROLE_MAP);
         if (destDict == null)
         {
             destStructTree.getCOSObject().setItem(COSName.ROLE_MAP, srcDict); // clone not needed
@@ -1287,7 +1289,7 @@ public class PDFMergerUtility
         List<PDField> srcFields = srcAcroForm.getFields();
         COSArray destFields;
 
-        if (srcFields != null && !srcFields.isEmpty())
+        if (!srcFields.isEmpty())
         {
             // get the destinations root fields. Could be that the entry doesn't exist
             // or is of wrong type
@@ -1431,7 +1433,7 @@ public class PDFMergerUtility
         List<PDField> srcFields = srcAcroForm.getFields();
         COSArray destFields;
 
-        if (srcFields != null && !srcFields.isEmpty())
+        if (!srcFields.isEmpty())
         {
             // if a form is merged multiple times using PDFBox the newly generated
             // fields starting with dummyFieldName may already exist. We need to determine the last unique 
@@ -1442,7 +1444,7 @@ public class PDFMergerUtility
             for (PDField destField : destAcroForm.getFieldTree())
             {
                 String fieldName = destField.getPartialName();
-                if (fieldName.startsWith(prefix))
+                if (fieldName != null && fieldName.startsWith(prefix))
                 {
                     String suffix = fieldName.substring(prefixLength);
                     if (suffix.matches("\\d+"))

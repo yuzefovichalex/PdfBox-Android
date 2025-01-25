@@ -80,7 +80,7 @@ public class NamingTable extends TTFTable
                 continue;
             }
 
-            data.seek(getOffset() + (2*3)+numberOfNameRecords*2*6+nr.getStringOffset());
+            data.seek(getOffset() + (2*3L)+numberOfNameRecords*2*6+nr.getStringOffset());
             int platform = nr.getPlatformId();
             int encoding = nr.getPlatformEncodingId();
             Charset charset = Charsets.ISO_8859_1;
@@ -136,7 +136,7 @@ public class NamingTable extends TTFTable
             Map<Integer, String> languageLookup = encodingLookup.get(nr.getPlatformEncodingId());
             if (languageLookup == null)
             {
-                languageLookup = new HashMap<Integer, String>();
+                languageLookup = new HashMap<Integer, String>(1);
                 encodingLookup.put(nr.getPlatformEncodingId(), languageLookup);
             }
             // language id / string

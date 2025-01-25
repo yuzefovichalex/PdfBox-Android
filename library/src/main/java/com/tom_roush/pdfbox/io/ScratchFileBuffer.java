@@ -16,13 +16,8 @@
  */
 package com.tom_roush.pdfbox.io;
 
-import android.util.Log;
-
 import java.io.EOFException;
 import java.io.IOException;
-
-import com.tom_roush.pdfbox.android.PDFBoxConfig;
-import com.tom_roush.pdfbox.cos.COSStream;
 
 /**
  * Implementation of {@link RandomAccess} as sequence of multiple fixed size pages handled
@@ -483,44 +478,28 @@ class ScratchFileBuffer implements RandomAccess
     @Override
     public void close() throws IOException
     {
-        if (pageHandler != null) {
-
-            pageHandler.markPagesAsFree(pageIndexes, 0, pageCount);
-            pageHandler = null;
-
-            pageIndexes = null;
-            currentPage = null;
-            currentPageOffset = 0;
-            currentPagePositionInPageIndexes = -1;
-            positionInPage = 0;
-            size = 0;
-        }
+        close(true);
     }
 
     /**
-     * While calling finalize is normally discouraged we will have to
-     * use it here as long as closing a scratch file buffer is not 
-     * done in every case. Currently {@link COSStream} creates new
-     * buffers without closing the old one - which might still be
-     * used.
+     * Release all resources and remove this buffer from ScratchFile.
      *
-     * <p>Enabling debugging one will see if there are still cases
-     * where the buffer is not closed.</p>
+     * @param removeBuffer remove buffer from ScratchFile if set to true
      */
-    @Override
-    protected void finalize() throws Throwable
+    void close(boolean removeBuffer)
     {
-        try
+        if (pageHandler != null)
         {
-            if ((pageHandler != null) && PDFBoxConfig.isDebugEnabled())
+            pageHandler.markPagesAsFree(pageIndexes, 0, pageCount);
+            if (removeBuffer)
             {
-                Log.d("PdfBox-Android", "ScratchFileBuffer not closed!");
+                pageHandler.removeBuffer(this);
             }
-            close();
-        }
-        finally
-        {
-            super.finalize();
+            pageHandler = null;
+            pageIndexes = null;
+            currentPage = null;
+            currentPageOffset = 0;
+            size = 0;
         }
     }
 }

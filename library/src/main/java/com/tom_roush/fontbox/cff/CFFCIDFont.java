@@ -20,6 +20,7 @@ package com.tom_roush.fontbox.cff;
 import android.graphics.Path;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,10 @@ public class CFFCIDFont extends CFFFont
     private String ordering;
     private int supplement;
 
-    private List<Map<String, Object>> fontDictionaries = new LinkedList<Map<String,Object>>();
-    private List<Map<String, Object>> privateDictionaries = new LinkedList<Map<String,Object>>();
+    private List<Map<String, Object>> fontDictionaries = Collections.emptyList();
+
+    private List<Map<String, Object>> privateDictionaries = Collections.emptyList();
+
     private FDSelect fdSelect;
 
     private final Map<Integer, CIDKeyedType2CharString> charStringCache =
@@ -175,7 +178,7 @@ public class CFFCIDFont extends CFFFont
     private int getDefaultWidthX(int gid)
     {
         int fdArrayIndex = this.fdSelect.getFDIndex(gid);
-        if (fdArrayIndex == -1)
+        if (fdArrayIndex == -1 || fdArrayIndex >= this.privateDictionaries.size())
         {
             return 1000;
         }
@@ -191,7 +194,7 @@ public class CFFCIDFont extends CFFFont
     private int getNominalWidthX(int gid)
     {
         int fdArrayIndex = this.fdSelect.getFDIndex(gid);
-        if (fdArrayIndex == -1)
+        if (fdArrayIndex == -1 || fdArrayIndex >= this.privateDictionaries.size())
         {
             return 0;
         }
@@ -207,7 +210,7 @@ public class CFFCIDFont extends CFFFont
     private byte[][] getLocalSubrIndex(int gid)
     {
         int fdArrayIndex = this.fdSelect.getFDIndex(gid);
-        if (fdArrayIndex == -1)
+        if (fdArrayIndex == -1 || fdArrayIndex >= this.privateDictionaries.size())
         {
             return null;
         }

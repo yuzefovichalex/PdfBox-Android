@@ -547,11 +547,10 @@ public final class TTFSubsetter
             {
                 is.close();
             }
-            if (glyphIdsToAdd != null)
-            {
+            hasNested = glyphIdsToAdd != null;
+            if (hasNested) {
                 glyphIds.addAll(glyphIdsToAdd);
             }
-            hasNested = glyphIdsToAdd != null;
         }
         while (hasNested);
     }
@@ -1011,7 +1010,7 @@ public final class TTFSubsetter
             for (Map.Entry<String, byte[]> entry : tables.entrySet())
             {
                 checksum += writeTableHeader(out, entry.getKey(), offset, entry.getValue());
-                offset += (entry.getValue().length + 3) / 4 * 4;
+                offset += (entry.getValue().length + 3L) / 4 * 4;
             }
             checksum = 0xB1B0AFBAL - (checksum & 0xffffffffL);
 

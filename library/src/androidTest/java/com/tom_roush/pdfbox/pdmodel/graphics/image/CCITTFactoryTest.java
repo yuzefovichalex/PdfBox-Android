@@ -77,7 +77,7 @@ public class CCITTFactoryTest extends TestCase
             new RandomAccessBuffer(testContext.getAssets().open(tiffG3Path)));
         validate(ximage3, 1, 344, 287, "tiff", PDDeviceGray.INSTANCE.getName());
 //        Bitmap bim3 = ImageIO.read(new File(tiffG3Path));
-//        checkIdent(bim3, ximage3.getOpaqueImage());
+//        checkIdent(bim3, ximage3.getOpaqueImage(null, 1));
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
         PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, false);
@@ -88,7 +88,7 @@ public class CCITTFactoryTest extends TestCase
             new RandomAccessBuffer(testContext.getAssets().open(tiffG4Path)));
         validate(ximage4, 1, 344, 287, "tiff", PDDeviceGray.INSTANCE.getName());
 //        Bitmap bim4 = ImageIO.read(new File(tiffG3Path));
-//        checkIdent(bim4, ximage4.getOpaqueImage());
+//        checkIdent(bim4, ximage4.getOpaqueImage(null, 1));
         page = new PDPage(PDRectangle.A4);
         document.addPage(page);
         contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, false);
@@ -131,7 +131,7 @@ public class CCITTFactoryTest extends TestCase
             }
 //            Bitmap bim = imageReader.read(pdfPageNum);
 //            validate(ximage, 1, bim.getWidth(), bim.getHeight(), "tiff", PDDeviceGray.INSTANCE.getName());
-//            checkIdent(bim, ximage.getOpaqueImage());
+//            checkIdent(bim, ximage.getOpaqueImage(null, 1));
             PDPage page = new PDPage(PDRectangle.A4);
             float fX = ximage.getWidth() / page.getMediaBox().getWidth();
             float fY = ximage.getHeight() / page.getMediaBox().getHeight();
@@ -163,7 +163,7 @@ public class CCITTFactoryTest extends TestCase
 //        Bitmap bim = ImageIO.read(new File(tiffG4Path));
 //        PDImageXObject ximage3 = CCITTFactory.createFromImage(document, bim);
 //        validate(ximage3, 1, 344, 287, "tiff", PDDeviceGray.INSTANCE.getName());
-//        checkIdent(bim, ximage3.getOpaqueImage());
+//        checkIdent(bim, ximage.getOpaqueImage(null, 1));
 
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
@@ -197,7 +197,7 @@ public class CCITTFactoryTest extends TestCase
 
         PDImageXObject ximage3 = CCITTFactory.createFromImage(document, bim);
         validate(ximage3, 1, 343, 287, "tiff", PDDeviceGray.INSTANCE.getName());
-//        checkIdent(bim, ximage3.getOpaqueImage()); TODO: PdfBox-Android
+//        checkIdent(bim, ximage3.getOpaqueImage(null, 1)); TODO: PdfBox-Android
 
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);

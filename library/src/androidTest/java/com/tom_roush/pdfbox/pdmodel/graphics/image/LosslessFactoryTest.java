@@ -172,7 +172,7 @@ public class LosslessFactoryTest
         validate(ximage, 8, argbImage.getWidth(), argbImage.getHeight(), "png",
             PDDeviceRGB.INSTANCE.getName());
         checkIdent(argbImage, ximage.getImage());
-        checkIdentRGB(argbImage, ximage.getOpaqueImage());
+        checkIdentRGB(argbImage, ximage.getOpaqueImage(null, 1));
 
         assertNotNull(ximage.getSoftMask());
         validate(ximage.getSoftMask(), 8, argbImage.getWidth(), argbImage.getHeight(), "png",
@@ -224,7 +224,7 @@ public class LosslessFactoryTest
 
         validate(ximage, 8, w, h, "png", PDDeviceRGB.INSTANCE.getName());
         checkIdent(argbImage, ximage.getImage());
-        checkIdentRGB(argbImage, ximage.getOpaqueImage());
+        checkIdentRGB(argbImage, ximage.getOpaqueImage(null, 1));
 
         assertNotNull(ximage.getSoftMask());
         validate(ximage.getSoftMask(), 8, w, h, "png", PDDeviceGray.INSTANCE.getName());
@@ -268,7 +268,7 @@ public class LosslessFactoryTest
 
         validate(ximage, 8, w, h, "png", PDDeviceRGB.INSTANCE.getName());
         checkIdent(rgbImage, ximage.getImage());
-        checkIdentRGB(rgbImage, ximage.getOpaqueImage());
+        checkIdentRGB(rgbImage, ximage.getOpaqueImage(null, 1));
 
         assertNull(ximage.getSoftMask());
 
@@ -385,7 +385,7 @@ public class LosslessFactoryTest
         int h = image.getHeight();
         validate(ximage, 8, w, h, "png", PDDeviceRGB.INSTANCE.getName());
         checkIdent(compareImage, ximage.getImage());
-        checkIdentRGB(compareImage, ximage.getOpaqueImage());
+        checkIdentRGB(compareImage, ximage.getOpaqueImage(null, 1));
 
         assertNotNull(ximage.getSoftMask());
         validate(ximage.getSoftMask(), 8, w, h, "png", PDDeviceGray.INSTANCE.getName());

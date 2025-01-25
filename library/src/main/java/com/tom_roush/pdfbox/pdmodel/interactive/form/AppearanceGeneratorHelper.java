@@ -128,11 +128,11 @@ class AppearanceGeneratorHelper {
         // add font resources which might be available at the field
         // level but are not at the AcroForm level to the AcroForm
         // to match Adobe Reader/Acrobat behavior
-        if (field.getAcroForm().getDefaultResources() == null) {
+        PDResources acroFormResources = field.getAcroForm().getDefaultResources();
+        if (acroFormResources == null)
+        {
             return;
         }
-
-        PDResources acroFormResources = field.getAcroForm().getDefaultResources();
 
         for (PDAnnotationWidget widget : field.getWidgets())
         {
@@ -455,8 +455,9 @@ class AppearanceGeneratorHelper {
         if (widget.getBorderStyle() != null) {
             borderWidth = widget.getBorderStyle().getWidth();
         }
-        PDRectangle clipRect = applyPadding(bbox, Math.max(1f, borderWidth));
-        PDRectangle contentRect = applyPadding(clipRect, Math.max(1f, borderWidth));
+        float padding = Math.max(1f, borderWidth);
+        PDRectangle clipRect = applyPadding(bbox, padding);
+        PDRectangle contentRect = applyPadding(clipRect, padding);
 
         contents.saveGraphicsState();
 
@@ -623,8 +624,12 @@ class AppearanceGeneratorHelper {
      * @return the comb state
      */
     private boolean shallComb() {
-        return field instanceof PDTextField && ((PDTextField) field).isComb() && !((PDTextField) field).isMultiline()
-            && !((PDTextField) field).isPassword() && !((PDTextField) field).isFileSelect();
+        return field instanceof PDTextField &&
+            ((PDTextField) field).isComb() &&
+            ((PDTextField) field).getMaxLen() != -1 &&
+            !((PDTextField) field).isMultiline() &&
+            !((PDTextField) field).isPassword() &&
+            !((PDTextField) field).isFileSelect();
     }
 
     /**
