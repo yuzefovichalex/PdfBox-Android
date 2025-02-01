@@ -133,6 +133,8 @@ public class PageDrawer extends PDFGraphicsStreamEngine
     // glyph cache
     private final Map<PDFont, Glyph2D> fontGlyph2D = new HashMap<PDFont, Glyph2D>();
 
+    private final Path tmpGlyphPath = new Path();
+
     private PointF currentPoint = new PointF();
 
     private final Deque<TransparencyGroup> transparencyGroupStack = new ArrayDeque<>();
@@ -407,8 +409,8 @@ public class PageDrawer extends PDFGraphicsStreamEngine
         PDGraphicsState state = getGraphicsState();
         RenderingMode renderingMode = state.getTextState().getRenderingMode();
 
-        Path path = glyph2D.getPathForCharacterCode(code);
-        if (path != null)
+        Path glyphPath = glyph2D.getPathForCharacterCode(code);
+        if (glyphPath != null)
         {
             // Stretch non-embedded glyph if it does not match the height/width contained in the PDF.
             // Vertical fonts have zero X displacement, so the following code scales to 0 if we don't skip it.
@@ -424,9 +426,11 @@ public class PageDrawer extends PDFGraphicsStreamEngine
                 }
             }
 
-            // render glyph
-//            Shape glyph = at.createTransformedShape(path);
-            path.transform(at.toMatrix());
+            // Render glyph. We need to use intermediate temporary path, since applying
+            // transformation to the cached glyph path causes render issues for some fonts.
+            // Setting path to the temporary one clears any previously applied transformation.
+            tmpGlyphPath.set(glyphPath);
+            tmpGlyphPath.transform(at.toMatrix());
 
             if (isContentRendered())
             {
@@ -435,7 +439,7 @@ public class PageDrawer extends PDFGraphicsStreamEngine
                     paint.setColor(getNonStrokingColor());
                     setClip();
                     paint.setStyle(Paint.Style.FILL);
-                    canvas.drawPath(path, paint);
+                    canvas.drawPath(tmpGlyphPath, paint);
                 }
 
                 if (renderingMode.isStroke())
@@ -444,7 +448,7 @@ public class PageDrawer extends PDFGraphicsStreamEngine
                     setStroke();
                     setClip();
                     paint.setStyle(Paint.Style.STROKE);
-                    canvas.drawPath(path, paint);
+                    canvas.drawPath(tmpGlyphPath, paint);
                 }
             }
 
